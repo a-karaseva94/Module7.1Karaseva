@@ -1,4 +1,5 @@
 from pprint import pprint
+import os
 
 class Product:
 
@@ -8,27 +9,30 @@ class Product:
         self.category = category
 
     def __str__(self):
-        return f'{self.name}, {self.weight}, {self.category}.\n'
+        return f'{self.name}, {self.weight}, {self.category}'
 
 class Shop:
+    __file_name = 'products.txt'
     def __init__(self):
-        self.__file_name = 'products.txt'
+        if not os.path.exists(Shop.__file_name):
+            open(Shop.__file_name, 'w').close()
 
     def get_products(self):
         file = open(self.__file_name, 'r')
-        pprint(file.read())
+        str_ = (file.read())
         file.close()
+        return str_
 
     def add(self, *products):
-        file = open(self.__file_name, 'a')
-        S = str(self.get_products())
-        for p in products:
-            if p.name in S:
-                print(f'Продукт {p.name} уже есть в магазине')
+        self.file = open(self.__file_name, 'a')
+        for product in products:
+            if product.name not in self.get_products():
+                self.file.write(str(product) + '\n')
+                self.file.seek(0)
             else:
-                file.write(str(p))
-                S += str(p)
-        file.close()
+                print(f'Продукт {product.name} уже есть в магазине')
+
+
 
 
 s1 = Shop()
